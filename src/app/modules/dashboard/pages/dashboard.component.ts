@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { DashboardRoutingModule } from '../dashboard-routing.module';
 import { CommonModule } from '@angular/common';
+import { SidenavComponent } from "../../shared/components/sidenav/sidenav.component";
+import { CategoryModule } from '../../category/category.module';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardRoutingModule],
+  imports: [CommonModule, SidenavComponent, CategoryModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
