@@ -110,4 +110,17 @@ export class CategoryComponent {
     });
   }
 
+  buscar(termino: string) {
+    if (termino.length === 0) {
+      return this.getCategories();
+    }
+
+    this.categoryService.getCategoryById(termino)
+      .subscribe({
+        next: (resp) => {
+          this.processCategoriesResponse(resp);
+        }
+      })
+  }
+
 }

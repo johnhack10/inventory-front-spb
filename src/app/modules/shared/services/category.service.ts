@@ -30,4 +30,9 @@ export class CategoryService {
     const endpoint = `${base_url}/categories/${id}`;
     return this.htt.delete(endpoint);
   }
+
+  getCategoryById(id: string) {
+    const endpoint = `${base_url}/categories/${id}`;
+    return this.htt.get(endpoint);
+  }
 }
