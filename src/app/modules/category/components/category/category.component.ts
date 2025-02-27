@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,6 +30,9 @@ export class CategoryComponent {
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   dataSource = new MatTableDataSource<CategoryElement>();
 
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
   ngOnInit(): void {
     this.getCategories();
   }
@@ -52,6 +55,7 @@ export class CategoryComponent {
       });
 
       this.dataSource = new MatTableDataSource<CategoryElement>(dataCategory);
+      this.dataSource.paginator = this.paginator;
     }
   }
 
@@ -120,7 +124,6 @@ export class CategoryComponent {
         next: (resp) => {
           this.processCategoriesResponse(resp);
         }
-      })
+      });
   }
-
 }
