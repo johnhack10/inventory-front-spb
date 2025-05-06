@@ -1,0 +1,61 @@
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+import { ProductElement } from '../../shared/models/product.model';
+import { ProductService } from '../../shared/services/product.service';
+
+@Component({
+  selector: 'app-product',
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatPaginator],
+  templateUrl: './product.component.html',
+  styleUrl: './product.component.css'
+})
+export class ProductComponent implements OnInit {
+  private readonly productService = inject(ProductService);
+
+  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'category', 'picture', 'actions'];
+  dataSource = new MatTableDataSource<ProductElement>();
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  ngOnInit(): void {
+    this.getProducts();
+  }
+
+  getProducts() {
+    this.productService.getProducts()
+      .subscribe({
+        next: (products: any) => {
+          this.processProductsResponse(products);
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+  }
+
+  processProductsResponse(resp: any) {
+    const dataProduct: ProductElement[] = [];
+    if (resp.metadata[0].code === "00") {
+      let listProduct = resp.product.products;
+      listProduct.forEach((element: ProductElement) => {
+        element.category = element.category.name;
+        element.picture = element.picture === null ? "assets/images/no-image.png" : 'data:image/jpeg;base64,' + element.picture;
+        dataProduct.push(element);
+      });
+
+      this.dataSource = new MatTableDataSource<ProductElement>(dataProduct);
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
+}
