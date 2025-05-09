@@ -114,7 +114,7 @@ export class CategoryComponent {
     });
   }
 
-  buscar(termino: string) {
+  applyFilter(termino: string) {
     if (termino.length === 0) {
       return this.getCategories();
     }

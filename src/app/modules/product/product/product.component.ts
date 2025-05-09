@@ -117,7 +117,6 @@ export class ProductComponent implements OnInit {
         title: "Eliminar Producto",
       }
     });
-
     dialogRef.afterClosed().subscribe((result: any) => {
       switch (result) {
         case 1:
@@ -130,5 +129,23 @@ export class ProductComponent implements OnInit {
       }
     })
   }
+
+  applyFilter(name: string) {
+      if (name.length === 0) {
+        return this.getProducts();
+      }
+
+      this.productService.getProductByName(name)
+      .subscribe({
+        next: (products: any) => {
+          this.processProductsResponse(products);
+        },
+        error: (error: any) => {
+          console.error(error);
+        }
+      });
+
+    }
+
 
 }
