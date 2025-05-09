@@ -13,6 +13,7 @@ import { ProductElement } from '../../shared/models/product.model';
 import { ProductService } from '../../shared/services/product.service';
 import { NewProductComponent } from '../new-product/new-product.component';
 import { NotificationServiceService } from '../../shared/services/notification-service.service';
+import { ConfirmComponent } from '../../shared/components/confirm/confirm.component';
 
 @Component({
   selector: 'app-product',
@@ -105,6 +106,29 @@ export class ProductComponent implements OnInit {
       }
     })
 
+  }
+
+  delete(id: number) {
+      const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: "450px",
+      data: {
+        id: id,
+        module: "product",
+        title: "Eliminar Producto",
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      switch (result) {
+        case 1:
+          this.servicioNotificacion.showNotification("Producto eliminado", "Exitosa")
+          this.getProducts();
+          break;
+        case 2:
+          this.servicioNotificacion.showNotification("Se produjo un error al eliminar el producto", "Error")
+          break;
+      }
+    })
   }
 
 }

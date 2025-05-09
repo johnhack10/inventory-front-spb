@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { CategoryService } from '../../services/category.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-confirm',
@@ -14,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class ConfirmComponent {
 
   readonly catecogryService = inject(CategoryService);
+  readonly productService = inject(ProductService);
   readonly dialogRef = inject(MatDialogRef);
   public dialogData = inject(MAT_DIALOG_DATA);
 
@@ -23,17 +25,27 @@ export class ConfirmComponent {
 
   delete() {
     if (this.dialogData !== null) {
-      this.catecogryService.deleteCategory(this.dialogData.id).subscribe({
-        next: (data) => {
-          this.dialogRef.close(1);
-        },
-        error: (error) => {
-          this.dialogRef.close(2);
-        }
-      });
-      return;
-    }
 
+      if (this.dialogData.module === 'category') {
+        this.catecogryService.deleteCategory(this.dialogData.id).subscribe({
+          next: (data) => {
+            this.dialogRef.close(1);
+          },
+          error: (error) => {
+            this.dialogRef.close(2);
+          }
+        });
+      } else if (this.dialogData.module === 'product') {
+        this.productService.deleteProduct(this.dialogData.id).subscribe({
+          next: (data) => {
+            this.dialogRef.close(1);
+          },
+          error: (error) => {
+            this.dialogRef.close(2);
+          }
+        });
+      }
+    }
     this.dialogRef.close(2);
   }
 }
