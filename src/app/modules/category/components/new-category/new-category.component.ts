@@ -29,7 +29,6 @@ export class NewCategoryComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
-
     if (this.data !== null) {
       this.updateForm(this.data);
       this.formStatus = "Actualizar"

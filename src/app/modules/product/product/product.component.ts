@@ -7,9 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ProductElement } from '../../shared/models/product.model';
 import { ProductService } from '../../shared/services/product.service';
+import { NewProductComponent } from '../new-product/new-product.component';
+import { NotificationServiceService } from '../../shared/services/notification-service.service';
 
 @Component({
   selector: 'app-product',
@@ -20,6 +23,8 @@ import { ProductService } from '../../shared/services/product.service';
 })
 export class ProductComponent implements OnInit {
   private readonly productService = inject(ProductService);
+  readonly dialog = inject(MatDialog)
+  readonly servicioNotificacion = inject(NotificationServiceService);
 
   displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'category', 'picture', 'actions'];
   dataSource = new MatTableDataSource<ProductElement>();
@@ -56,6 +61,24 @@ export class ProductComponent implements OnInit {
       this.dataSource = new MatTableDataSource<ProductElement>(dataProduct);
       this.dataSource.paginator = this.paginator;
     }
+  }
+
+  openProductDialog() {
+    const dialogRef = this.dialog.open(NewProductComponent, {
+            width: "450px"
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+            switch (result) {
+              case 1:
+                this.servicioNotificacion.showNotification("Producto Agregado", "Exitosa")
+                this.getProducts();
+                break;
+              case 2:
+                this.servicioNotificacion.showNotification("Se produjo un error al guardar el producto", "Error")
+                break;
+             }
+          });
   }
 
 }

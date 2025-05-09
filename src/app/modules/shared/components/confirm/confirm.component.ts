@@ -15,15 +15,15 @@ export class ConfirmComponent {
 
   readonly catecogryService = inject(CategoryService);
   readonly dialogRef = inject(MatDialogRef);
-  public data = inject(MAT_DIALOG_DATA);
+  public dialogData = inject(MAT_DIALOG_DATA);
 
   onNoClick() {
       this.dialogRef.close(3);
   }
 
   delete() {
-    if (this.data !== null) {
-      this.catecogryService.deleteCategory(this.data.id).subscribe({
+    if (this.dialogData !== null) {
+      this.catecogryService.deleteCategory(this.dialogData.id).subscribe({
         next: (data) => {
           this.dialogRef.close(1);
         },
