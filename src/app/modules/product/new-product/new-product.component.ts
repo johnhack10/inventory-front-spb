@@ -34,7 +34,7 @@ export class NewProductComponent implements OnInit {
   public dialogData = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
-    this.formStatus = "Agregar Nueva";
+    this.formStatus = "Agregar Nuevo";
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       price: ['', Validators.required],
@@ -43,6 +43,11 @@ export class NewProductComponent implements OnInit {
       picture: ['', Validators.required]
     });
     this.getCategories();
+
+    if(this.dialogData) {
+      this.formStatus = "Actualizar";
+      this.updateForm(this.dialogData);
+    }
   }
 
   onSave() {
@@ -63,15 +68,27 @@ export class NewProductComponent implements OnInit {
     uploadImageData.append('quantity', data.quantity);
     uploadImageData.append('categoryId', data.category);
 
-    this.productService.saveProduct(uploadImageData)
-    .subscribe({
-      next: (data: any) => {
-        this.dialogRef.close(1);
-      },
-      error: (error: any) => {
-        this.dialogRef.close(2);
-      }
-    });
+    if(this.dialogData) {
+      this.productService.updateProduct(this.dialogData.id, uploadImageData)
+      .subscribe({
+        next: (data: any) => {
+          this.dialogRef.close(1);
+        },
+        error: (error: any) => {
+          this.dialogRef.close(2);
+        }
+      });
+    } else {
+      this.productService.saveProduct(uploadImageData)
+      .subscribe({
+        next: (data: any) => {
+          this.dialogRef.close(1);
+        },
+        error: (error: any) => {
+          this.dialogRef.close(2);
+        }
+      });
+    }
 
   }
 
@@ -96,5 +113,16 @@ export class NewProductComponent implements OnInit {
     if (this.selectedFile) {
       this.nameImage = this.selectedFile.name;
     }
+  }
+
+  updateForm(data: any) {
+    this.productForm.patchValue({
+        name: this.dialogData.name,
+        price: this.dialogData.price,
+        quantity: this.dialogData.quantity,
+        category: this.dialogData.category.id
+      });
+      this.selectedFile = null;
+      this.nameImage = '';
   }
 }

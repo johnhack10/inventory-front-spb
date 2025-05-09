@@ -53,7 +53,6 @@ export class ProductComponent implements OnInit {
     if (resp.metadata[0].code === "00") {
       let listProduct = resp.product.products;
       listProduct.forEach((element: ProductElement) => {
-        element.category = element.category.name;
         element.picture = element.picture === null ? "assets/images/no-image.png" : 'data:image/jpeg;base64,' + element.picture;
         dataProduct.push(element);
       });
@@ -79,6 +78,33 @@ export class ProductComponent implements OnInit {
                 break;
              }
           });
+  }
+
+  edit(element: ProductElement) {
+    const dialogRef = this.dialog.open(NewProductComponent, {
+      width: "450px",
+      data: {
+        id: element.id,
+        name: element.name,
+        price: element.price,
+        quantity: element.quantity,
+        category: element.category,
+        picture: element.picture
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      switch (result) {
+        case 1:
+          this.servicioNotificacion.showNotification("Producto Editado", "Exitosa")
+          this.getProducts();
+          break;
+        case 2:
+          this.servicioNotificacion.showNotification("Se produjo un error al editar el producto", "Error")
+          break;
+      }
+    })
+
   }
 
 }
