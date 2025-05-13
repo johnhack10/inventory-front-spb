@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { NgIf } from '@angular/common';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CategoryService } from '../../../shared/services/category.service';
@@ -14,11 +15,12 @@ import { CategoryElement } from '../../../shared/models/category.model';
 import { NewCategoryComponent } from '../new-category/new-category.component';
 import { NotificationServiceService } from '../../../shared/services/notification-service.service';
 import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
+import { UtilService } from '../../../shared/services/util.service';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatPaginator],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatPaginator],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
@@ -26,6 +28,9 @@ export class CategoryComponent {
   private readonly categoryService = inject(CategoryService)
   readonly dialog = inject(MatDialog)
   readonly servicioNotificacion = inject(NotificationServiceService);
+  private readonly utilService = inject(UtilService);
+
+  isAdmin: any;
 
   displayedColumns: string[] = ['id', 'name', 'description', 'actions'];
   dataSource = new MatTableDataSource<CategoryElement>();
@@ -35,6 +40,7 @@ export class CategoryComponent {
 
   ngOnInit(): void {
     this.getCategories();
+    this.isAdmin = this.utilService.isAdmin();
   }
 
   getCategories() {

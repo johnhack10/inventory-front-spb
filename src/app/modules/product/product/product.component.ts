@@ -8,17 +8,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
+import { NgIf } from '@angular/common';
 
 import { ProductElement } from '../../shared/models/product.model';
 import { ProductService } from '../../shared/services/product.service';
 import { NewProductComponent } from '../new-product/new-product.component';
 import { NotificationServiceService } from '../../shared/services/notification-service.service';
 import { ConfirmComponent } from '../../shared/components/confirm/confirm.component';
+import { UtilService } from '../../shared/services/util.service';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatPaginator],
+  imports: [FormsModule, ReactiveFormsModule, NgIf, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule, MatIconModule, MatPaginator],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css'
 })
@@ -26,6 +28,9 @@ export class ProductComponent implements OnInit {
   private readonly productService = inject(ProductService);
   readonly dialog = inject(MatDialog)
   readonly servicioNotificacion = inject(NotificationServiceService);
+
+  private readonly utilService = inject(UtilService);
+  isAdmin: any;
 
   displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'category', 'picture', 'actions'];
   dataSource = new MatTableDataSource<ProductElement>();
@@ -35,6 +40,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProducts();
+    this.isAdmin = this.utilService.isAdmin();
   }
 
   getProducts() {
