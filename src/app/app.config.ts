@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { KeycloakService } from 'keycloak-angular';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -40,5 +41,6 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
     KeycloakService,
+    provideCharts(withDefaultRegisterables()),
   ]
 };

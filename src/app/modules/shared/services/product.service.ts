@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 const base_url = "http://localhost:8080/api/v1";
 
@@ -34,4 +35,11 @@ export class ProductService {
     const endpoint = `${base_url}/products/filter/${name}`;
     return this.http.get(endpoint);
   }
+
+  exportProducts(): Observable<Blob> {
+      const endpoint = `${base_url}/products/export/excel`;
+      return this.http.get(endpoint, {
+        responseType: 'blob'
+      });
+    }
 }

@@ -151,7 +151,31 @@ export class ProductComponent implements OnInit {
         }
       });
 
-    }
+  }
+
+  exportExcel() {
+    this.productService.exportProducts()
+      .subscribe({
+        next: (resp: any) => {
+          if (!resp || resp.length === 0) {
+            this.servicioNotificacion.showNotification("No hay datos para exportar", "Información");
+            return;
+          }
+
+          const blob = new Blob([resp], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+          const url = window.URL.createObjectURL(blob);
+          const anchor = document.createElement('a');
+          anchor.download = 'products.xlsx';
+          anchor.href = url;
+          anchor.click();
+          window.URL.revokeObjectURL(url);
+          this.servicioNotificacion.showNotification("Archivo de productos exportado", "Exitosa")
+        },
+        error: () => {
+          this.servicioNotificacion.showNotification("Se produjo un error al exportar el archivo", "Error")
+        }
+      })
+  }
 
 
 }
